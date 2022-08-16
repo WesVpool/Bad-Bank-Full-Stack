@@ -1,10 +1,12 @@
+
 function Login(){
   const [show, setShow]         = React.useState(true);
   const [status, setStatus]     = React.useState('');
   const [name, setName]         = React.useState('');
   const [email, setEmail]       = React.useState('');
   const [password, setPassword] = React.useState('');
-  const ctx = React.useContext(UserContext);  
+  const [data, setData] = React.useState('');
+  const ctx = React.useContext(UserContext); 
 
   function validate(field, label){
     if (!field) {
@@ -14,20 +16,36 @@ function Login(){
     }
     return true;
 }
+function clearForm(){
+  setName('');
+  setEmail('');
+  setPassword('');
+  setShow(true);
+  ctx.users.splice(0,1);
+}
 
   function userLogin(){
     console.log(email,password);
     if (!validate(email,    'email'))    return;
     if (!validate(password, 'password')) return;
-    const index1 = ctx.users.findIndex(x => x.email === `${email}`)
-    const log = ctx.users.splice(index1, 1)
-    ctx.users = [log[0], ...ctx.users]
-    console.log(ctx.users)
-    //ctx.users.push({name,email,password,balance:100});
-    setShow(false);
+    fetch(`/account/login/${email}/${password}`)
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const user = JSON.parse(text);
+            ctx.users.splice(0,1,user);
+            setStatus('');
+            setShow(false);
+            setName(user.name);
+            console.log('JSON:', user);
+        } catch(err) {
+            setStatus(text)
+            console.log('err:', text);
+        }
+    });
   }
-  //const index = ctx.users.findIndex(x => x.email === `${email}`);
-
+ 
+  
   return (
     <Card
     bgcolor="primary"
@@ -43,8 +61,8 @@ function Login(){
             </>
           ):(
             <>
-            <h5>Success! Welcome {ctx.users[0].name}!</h5>
-            <button type="submit" className="btn btn-light" onClick={console.log("email")}>Login To Another Account</button>
+            <h5>Success! Welcome {name}!</h5>
+            <button type="submit" className="btn btn-light" onClick={() => clearForm()}>Login To A Different Account</button>
             </>
           )}
   />

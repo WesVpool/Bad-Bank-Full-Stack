@@ -32,12 +32,19 @@ function CreateAccount(){
     if (!validate(password, 'password')) return;
     if (!validatePass(password, 'password')) return;
     const url = `/account/create/${name}/${email}/${password}`;
-    (async () => {
-      var res = await fetch(url);
-      var data = await res.json();
-      console.log(data);
-    })();
-    setShow(false);
+    fetch(url)
+    .then(response => response.text())
+    .then(text => {
+        try {
+            const user = JSON.parse(text);
+            setStatus('');
+            setShow(false);
+            console.log('JSON:', user);
+        } catch(err) {
+            setStatus(text)
+            console.log('err:', text);
+        }
+    });
     
   }    
 
@@ -57,7 +64,7 @@ function CreateAccount(){
 
   return (
     <Card
-      bgcolor="primary"
+      bgcolor="success"
       header="Create Account"
       status={status}
       body={show ? (  

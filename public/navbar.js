@@ -29,11 +29,11 @@ function NavBar() {
                   Create Account
                 </a>
               </li>
-              {/* <li className="nav-item">
+              <li className="nav-item">
                 <a className="nav-link" data-toggle="tooltip" data-placement="bottom" title="Login to your account!" href="#/login/">
                   Login
                 </a>
-              </li> */}
+              </li>
               <li className="nav-item">
                 <a className="nav-link" data-toggle="tooltip" data-placement="bottom" title="Deposit money to your account!" href="#/deposit/">
                   Deposit
